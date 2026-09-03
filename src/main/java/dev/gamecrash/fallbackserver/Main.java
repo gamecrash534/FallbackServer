@@ -22,7 +22,10 @@ public final class Main {
     static void main(String[] args) {
         Configuration config = ConfigurationLoader.getDefault();
 
-        Auth auth = config.velocity.enabled ? new Auth.Velocity(config.velocity.authSecret) : new Auth.Online();
+        Auth auth;
+        if (config.isOnline()) auth = new Auth.Online();
+        else if (config.isVelocity()) auth = new Auth.Velocity(config.velocity.authSecret);
+        else auth = new Auth.Offline();
 
         MinecraftServer server = MinecraftServer.init(auth);
 
