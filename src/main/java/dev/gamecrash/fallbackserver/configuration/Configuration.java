@@ -1,8 +1,5 @@
 package dev.gamecrash.fallbackserver.configuration;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.minestom.server.Auth;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
@@ -14,12 +11,17 @@ public class Configuration {
     @Comment("Properties for where the server should listen")
     public Server server = new Server();
 
+    @Comment("World properties")
+    public World world = new World();
+
     @Comment("Different properties for the server")
     public Properties properties = new Properties();
 
     @Comment("Configuration regarding the use of a velocity proxy")
     public Velocity velocity = new Velocity();
 
+    @Comment("Messages that may be sent to the player")
+    public Messages messages = new Messages();
 
     @ConfigSerializable
     public static class Server {
@@ -38,6 +40,10 @@ public class Configuration {
         @Comment("The MOTD that will be displayed in the server list. Supports MiniMessage")
         public String motd = "<rainbow>Fallback Server";
 
+    }
+
+    @ConfigSerializable
+    public static class World {
         @Comment("The default game mode to use")
         public String defaultGamemode = "ADVENTURE";
 
@@ -49,6 +55,11 @@ public class Configuration {
     public static class Velocity {
         public boolean enabled = false;
         public @Nullable String authSecret;
+    }
+
+    @ConfigSerializable
+    public static class Messages {
+        public String shutdownMessage = "<red>Server stopped";
     }
 
     @ConfigSerializable

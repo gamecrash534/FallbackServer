@@ -26,9 +26,9 @@ public class Listener {
     }
 
     public void onPlayerSpawn(PlayerSpawnEvent e) {
-        Configuration.Position pos = config.properties.spawnPoint;
+        Configuration.Position pos = config.world.spawnPoint;
         e.getPlayer().teleport(new Vec(pos.x, pos.y, pos.z).asPos());
-        e.getPlayer().setGameMode(GameMode.valueOf(config.properties.defaultGamemode.toUpperCase(Locale.ROOT)));
+        e.getPlayer().setGameMode(GameMode.valueOf(config.world.defaultGamemode.toUpperCase(Locale.ROOT)));
     }
 
     public void onPlayerAsyncConfiguration(AsyncPlayerConfigurationEvent e) {
