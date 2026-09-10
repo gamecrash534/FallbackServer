@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
 
@@ -48,11 +49,17 @@ public class Configuration {
 
     @ConfigSerializable
     public static class World {
+        @Comment("The directory where the world is in. If a world inside that directory was not found or it is empty, a flat world will be used instead.")
+        public Path directory = Path.of("./world");
+
         @Comment("The default game mode to use")
         public String defaultGamemode = "ADVENTURE";
 
         @Comment("The location in a world where players will spawn")
         public Position spawnPoint = new Position(0.5, 2, 0.5);
+
+        @Comment("Whether or not to compute lighting. If a world appears fully dark, enabling this should fix it.")
+        public boolean computeLighting = false;
     }
 
     @ConfigSerializable

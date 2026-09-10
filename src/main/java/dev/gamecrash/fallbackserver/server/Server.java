@@ -9,6 +9,7 @@ import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.event.server.ServerListPingEvent;
+import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.network.player.PlayerSocketConnection;
 import org.tinylog.Logger;
 
@@ -25,7 +26,9 @@ public class Server {
 
         server = MinecraftServer.init(getAuth());
 
-        world = new World();
+        world = new World(configuration.world.directory);
+        if (config.world.computeLighting) world.instance().setChunkSupplier(LightingChunk::new);
+
         MinecraftServer.setBrandName(config.properties.brandName);
         registerListeners();
     }

@@ -1,12 +1,14 @@
 package dev.gamecrash.fallbackserver.world;
 
-import net.minestom.server.coordinate.BlockVec;
-import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.generator.GenerationUnit;
 import net.minestom.server.instance.generator.Generator;
 
 public class PlaneGenerator implements Generator {
+    public PlaneGenerator(GenerationUnit generationUnit) {
+        generate(generationUnit);
+    }
+
     @Override
     public void generate(GenerationUnit unit) {
         unit.modifier().fillHeight(-1, 0, Block.BEDROCK);
