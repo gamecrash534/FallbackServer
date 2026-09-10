@@ -5,12 +5,17 @@ import dev.gamecrash.fallbackserver.world.World;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.event.server.ServerListPingEvent;
+import net.minestom.server.network.player.PlayerSocketConnection;
 import org.tinylog.Logger;
+
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class Server {
     private final Configuration config;
@@ -32,9 +37,11 @@ public class Server {
     }
 
     public void stop() {
-        Logger.info("Shutdown");
-        world.instance().getPlayers().forEach(plr -> {
-            plr.kick(MiniMessage.miniMessage().deserialize(config.messages.shutdownMessage));
+        MinecraftServer.getConnectionManager().getOnlinePlayers().forEach(player -> {
+            player.kick(MiniMessage.miniMessage().deserialize(config.messages.shutdownMessage));
+            try {
+                ((PlayerSocketConnection) player.getPlayerConnection()).flushSync();
+            } catch (IOException ignored) { }
         });
         MinecraftServer.stopCleanly();
     }
