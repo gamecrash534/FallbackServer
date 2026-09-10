@@ -13,6 +13,7 @@ import org.tinylog.provider.ProviderRegistry;
 
 import java.time.temporal.TemporalUnit;
 import java.util.Locale;
+import java.util.Properties;
 
 public final class Main {
     static void main(String[] args) {

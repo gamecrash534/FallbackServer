@@ -68,7 +68,6 @@ public class Configuration {
     @ConfigSerializable
     public static class Logger {
         public String level = "info";
-        public boolean logToFile = false;
     }
 
     @ConfigSerializable
