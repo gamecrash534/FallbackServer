@@ -5,10 +5,12 @@ import dev.gamecrash.fallbackserver.world.World;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.ServerFlag;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.event.server.ServerListPingEvent;
+import org.tinylog.Logger;
 
 public class Server {
     private final Configuration config;
@@ -17,6 +19,7 @@ public class Server {
 
     public Server(Configuration configuration) {
         config = configuration;
+
         server = MinecraftServer.init(getAuth());
 
         world = new World();
@@ -29,6 +32,7 @@ public class Server {
     }
 
     public void stop() {
+        Logger.info("Shutdown");
         world.instance().getPlayers().forEach(plr -> {
             plr.kick(MiniMessage.miniMessage().deserialize(config.messages.shutdownMessage));
         });
@@ -36,6 +40,7 @@ public class Server {
     }
 
     private Auth getAuth() {
+        Logger.debug("Determining Auth to use");
         if (config.isOnline()) return new Auth.Online();
         else if (config.isVelocity()) {
             if (config.velocity.authSecret == null)
@@ -47,6 +52,7 @@ public class Server {
     }
 
     private void registerListeners() {
+        Logger.debug("Registering Listeners");
         GlobalEventHandler handler = MinecraftServer.getGlobalEventHandler();
         Listener listener = new Listener(world, config);
 

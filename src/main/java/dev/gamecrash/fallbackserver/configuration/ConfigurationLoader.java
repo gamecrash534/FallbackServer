@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.tinylog.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +28,7 @@ public class ConfigurationLoader {
     }
 
     public static Configuration getConfiguration(@Nullable String pathParam) throws ConfigurateException {
+        Logger.info("Loading configuration...");
         Path path;
 
         String envConfigPath = System.getProperty(env_config);

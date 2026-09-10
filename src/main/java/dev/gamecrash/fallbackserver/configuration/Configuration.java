@@ -23,6 +23,9 @@ public class Configuration {
     @Comment("Messages that may be sent to the player")
     public Messages messages = new Messages();
 
+    @Comment("Logger properties")
+    public Logger logger = new Logger();
+
     @ConfigSerializable
     public static class Server {
         public String address = "0.0.0.0";
@@ -35,7 +38,7 @@ public class Configuration {
         public boolean online = true;
 
         @Comment("The string of the server type displayed in the client F3 Menu")
-        public String brandName = "§cFallback§f";
+        public String brandName = "Fallback";
 
         @Comment("The MOTD that will be displayed in the server list. Supports MiniMessage")
         public String motd = "<rainbow>Fallback Server";
@@ -63,7 +66,17 @@ public class Configuration {
     }
 
     @ConfigSerializable
+    public static class Logger {
+        public String level = "info";
+        public boolean logToFile = false;
+    }
+
+    @ConfigSerializable
     public static class Position {
+        public Position() {
+            x = y = z = 0;
+        }
+
         public Position(double x, double y, double z) {
             this.x = x;
             this.y = y;
