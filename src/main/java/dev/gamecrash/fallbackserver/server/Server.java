@@ -5,7 +5,6 @@ import dev.gamecrash.fallbackserver.world.World;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
@@ -14,8 +13,7 @@ import net.minestom.server.network.player.PlayerSocketConnection;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.Collections;
 
 public class Server {
     private final Configuration config;
@@ -48,14 +46,23 @@ public class Server {
 
     private Auth getAuth() {
         Logger.debug("Determining Auth to use");
-        if (config.isOnline()) return new Auth.Online();
-        else if (config.isVelocity()) {
-            if (config.velocity.authSecret == null)
-                throw new IllegalArgumentException("Velocity auth secret must not be when Velocity is enabled!");
+        String secret = config.proxy.authSecret;
+        switch (config.proxy.type) {
+            case "velocity": {
+                if (secret.isBlank())
+                    throw new IllegalArgumentException("Velocity auth secret must not null be when Velocity is enabled!");
 
-            return new Auth.Velocity(config.velocity.authSecret);
+                return new Auth.Velocity(secret);
+            }
+            case "bungeecord": {
+                return new Auth.Bungee(secret.isBlank() ? null : Collections.singleton(secret));
+            }
+            default: {
+                return config.properties.online
+                    ? new Auth.Online()
+                    : new Auth.Offline();
+            }
         }
-        return new Auth.Offline();
     }
 
     private void registerListeners() {

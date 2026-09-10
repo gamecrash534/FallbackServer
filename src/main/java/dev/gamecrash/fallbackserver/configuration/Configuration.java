@@ -4,7 +4,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
-import java.awt.*;
+import java.util.Locale;
+import java.util.Set;
 
 @ConfigSerializable
 public class Configuration {
@@ -18,7 +19,7 @@ public class Configuration {
     public Properties properties = new Properties();
 
     @Comment("Configuration regarding the use of a velocity proxy")
-    public Velocity velocity = new Velocity();
+    public Proxy proxy = new Proxy();
 
     @Comment("Messages that may be sent to the player")
     public Messages messages = new Messages();
@@ -55,9 +56,17 @@ public class Configuration {
     }
 
     @ConfigSerializable
-    public static class Velocity {
-        public boolean enabled = false;
-        public @Nullable String authSecret;
+    public static class Proxy {
+        @Comment("""
+            The proxy type this server should use for authentication.
+            Following values are accepted:
+                'none'       : No Proxy (default)
+                'velocity'   : Use the Velocity proxy. Will require 'auth_secret' to be set.
+                'bungeecord' : Use Bungeecord as a proxy. 'auth_secret' can either be left empty or contain a key when using BungeeGuard.
+                               Note: currently only supports a single key."""
+        )
+        public String type = "none";
+        public String authSecret = "";
     }
 
     @ConfigSerializable
@@ -88,11 +97,15 @@ public class Configuration {
     }
 
     public boolean isOnline() {
-        return properties.online && !velocity.enabled;
+        return properties.online && proxy.type.toLowerCase(Locale.ROOT).equals("none");
     }
 
     public boolean isVelocity() {
-        return velocity.enabled;
+        return proxy.type.toLowerCase(Locale.ROOT).equals("velocity");
+    }
+
+    public boolean isBungee() {
+        return proxy.type.toLowerCase(Locale.ROOT).equals("bungeecord");
     }
 }
 
